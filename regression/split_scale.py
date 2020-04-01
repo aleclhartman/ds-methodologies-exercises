@@ -4,8 +4,14 @@ import pandas as pd
 import sklearn.preprocessing
 from sklearn.model_selection import train_test_split
 
-def split_my_data(X, y, train_pct):
-    return train_test_split(X, y, train_size=train_pct, random_state=56)
+# My inital solution:
+# def split_my_data(X, y, train_pct, seed):
+#     return train_test_split(X, y, train_size=train_pct, random_state=seed)
+
+# Faith's solution:
+def split_my_data(df, train_pct, seed):
+    train, test = train_test_split(df, train_size=train_pct, random_state=seed)
+    return train, test
 
 def standard_scaler(train, test):
     # create the object
@@ -18,9 +24,9 @@ def standard_scaler(train, test):
     return scaler, train_scaled, test_scaled
 
 def scale_inverse(scaler, train_scaled, test_scaled):
-    train_revert = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns, index=train_scaled.index)
-    test_revert = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns, index=test_scaled.index)
-    return train_revert, test_revert
+    train = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns, index=train_scaled.index)
+    test = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns, index=test_scaled.index)
+    return train, test
 
 def uniform_scaler(train, test):
     # create the object
@@ -34,7 +40,7 @@ def uniform_scaler(train, test):
 
 def gaussian_scaler(train, test):
     # create the object
-    scaler = sklearn.preprocessing.PowerTransformer(method="yeo-johnson")
+    scaler = sklearn.preprocessing.PowerTransformer(method="yeo-johnson", standardize=False)
     # fit the object
     scaler.fit(train)
     # use the object
