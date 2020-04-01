@@ -4,8 +4,6 @@ import pandas as pd
 import sklearn.preprocessing
 from sklearn.model_selection import train_test_split
 
-from wrangle import wrangle_telco
-
 def split_my_data(X, y, train_pct):
     return train_test_split(X, y, train_size=train_pct, random_state=56)
 
