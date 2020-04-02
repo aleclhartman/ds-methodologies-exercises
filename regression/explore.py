@@ -13,7 +13,7 @@ def months_to_years(tenure_months, df):
     df["tenure_years"] = (df.tenure / 12).round().astype("int")
     return df
 
-def plot_categorical_and_continous_vars(categorical_var, continuous_var, df):
+def plot_categorical_and_continuous_vars(categorical_var, continuous_var, df):
     plt.figure(figsize=(32, 18))
     
     plt.subplot(221)
