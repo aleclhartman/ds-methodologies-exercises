@@ -4,11 +4,6 @@ import pandas as pd
 import sklearn.preprocessing
 from sklearn.model_selection import train_test_split
 
-# My inital solution:
-# def split_my_data(X, y, train_pct, seed):
-#     return train_test_split(X, y, train_size=train_pct, random_state=seed)
-
-# Faith's solution:
 def split_my_data(df, train_pct, seed):
     train, test = train_test_split(df, train_size=train_pct, random_state=seed)
     return train, test

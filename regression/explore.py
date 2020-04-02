@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def plot_variable_pairs(dataframe):
-    pairplot = sns.pairplot(dataframe, kind="reg")
-    plt.show()
-    return pairplot
+    sns.pairplot(dataframe, kind="reg")
 
-def months_to_years(tenure_months, df):
-    df["tenure_years"] = (df.tenure / 12).round().astype("int")
+def months_to_years(tenure_months, df, rounding=False):
+    if rounding:
+        df["tenure_years"] = np.round(tenure_months / 12)
+    else:
+        df["tenure_years"] = np.round(tenure_months // 12)
     return df
 
 def plot_categorical_and_continuous_vars(categorical_var, continuous_var, df):
