@@ -30,6 +30,7 @@ def regression_errors(y, yhat, df):
     RMSE = sqrt(MSE)
     return SSE, ESS, TSS, MSE, RMSE
 
+# perhaps, add a baseline_calc argument that can be set to either mean or median so that logic can be added to the function to calculate the baseline within the function
 def baseline_mean_errors(y, yhat_baseline, df):
     SSE_baseline = mean_squared_error(y, yhat_baseline)*df.shape[0]
     MSE_baseline = mean_squared_error(y, yhat_baseline)
@@ -46,7 +47,7 @@ def better_than_baseline(y, yhat, yhat_baseline, df):
 
 def model_significance(ols_model):
     """
-    Takes in ordinary least squares model and returns the F p-value
+    Takes in an ordinary least squares model and returns the p-value of the F-statistic
     """
     f_pval = ols_model.f_pvalue
     return print(f"p-value for model significance = {f_pval}")
