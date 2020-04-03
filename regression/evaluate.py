@@ -9,19 +9,17 @@ from sklearn.metrics import mean_squared_error
 
 from math import sqrt
 
-def plot_residuals(x, y, yhat, yhat_baseline, df):
-    residual = yhat - y
+def plot_residuals(y, yhat, yhat_baseline, df):
     residual_baseline = yhat_baseline - y
+    residual = yhat - y
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(16, 9))
     ax1 = axs[0]
     ax2 = axs[1]
     ax1.set_title("Baseline Residuals")
     ax2.set_title("Residuals")
     fig.text(.1, 0.5, "yhat - y", ha="center", va="center", rotation="vertical")
-    sns.lineplot(x=range(round(x.min()), round(x.max())), y=0, data=df, color="green", ax=axs[0])
-    sns.scatterplot(x=x, y=residual_baseline, data=df, color="crimson", ax=axs[0]) # residual baseline
-    sns.lineplot(x=range(round(x.min()), round(x.max())), y=0, data=df, color="green", ax=axs[1])
-    sns.scatterplot(x=x, y=residual, data=df, color="navy", ax=axs[1]) # residual
+    sns.scatterplot(x=y, y=residual_baseline, data=df, color="crimson", ax=axs[0]) # residual baseline
+    sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[1]) # residual
     plt.show()
 
 def regression_errors(y, yhat, df):
@@ -45,3 +43,10 @@ def better_than_baseline(y, yhat, yhat_baseline, df):
         return True
     else:
         return False
+
+def model_significance(ols_model):
+    """
+    Takes in ordinary least squares model and returns the F p-value
+    """
+    f_pval = ols_model.f_pvalue
+    return print(f"p-value (or model significance) = {f_pval}")
