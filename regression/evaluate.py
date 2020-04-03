@@ -22,6 +22,7 @@ def plot_residuals(y, yhat, yhat_baseline, df):
     sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[1]) # residual
     plt.show()
 
+# consider returning a dictionary (or Series or DataFrame) of your calculations
 def regression_errors(y, yhat, df):
     SSE = mean_squared_error(y, yhat)*df.shape[0]
     ESS = sum((yhat - y.mean())**2)
@@ -30,6 +31,7 @@ def regression_errors(y, yhat, df):
     RMSE = sqrt(MSE)
     return SSE, ESS, TSS, MSE, RMSE
 
+# consider returning a dictionary (or Series or DataFrame) of your calculations
 # perhaps, add a baseline_calc argument that can be set to either mean or median so that logic can be added to the function to calculate the baseline within the function
 def baseline_mean_errors(y, yhat_baseline, df):
     SSE_baseline = mean_squared_error(y, yhat_baseline)*df.shape[0]
@@ -40,7 +42,7 @@ def baseline_mean_errors(y, yhat_baseline, df):
 def better_than_baseline(y, yhat, yhat_baseline, df):
     SSE, ESS, TSS, MSE, RMSE = regression_errors(y=y, yhat=yhat, df=df)
     SSE_baseline, MSE_baseline, RMSE_baseline = baseline_mean_errors(y=y, yhat_baseline=yhat_baseline, df=df)
-    if SSE < SSE_baseline and MSE < MSE_baseline and RMSE < RMSE_baseline:
+    if RMSE < RMSE_baseline:
         return True
     else:
         return False
