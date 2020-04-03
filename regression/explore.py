@@ -14,6 +14,7 @@ def months_to_years(tenure_months, df, rounding=False):
         df["tenure_years"] = np.round(tenure_months // 12)
     return df
 
+# make this function more dynamic
 def plot_categorical_and_continuous_vars(categorical_var, continuous_var, df):
     plt.figure(figsize=(32, 18))
     
