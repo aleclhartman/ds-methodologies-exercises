@@ -49,4 +49,4 @@ def model_significance(ols_model):
     Takes in ordinary least squares model and returns the F p-value
     """
     f_pval = ols_model.f_pvalue
-    return print(f"p-value (or model significance) = {f_pval}")
+    return print(f"p-value for model significance = {f_pval}")
