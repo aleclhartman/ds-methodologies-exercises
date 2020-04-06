@@ -4,7 +4,7 @@ import pandas as pd
 import sklearn.preprocessing
 from sklearn.model_selection import train_test_split
 
-def split_my_data(df, train_pct, seed):
+def split_my_data(df, train_pct=0.8, seed=56):
     train, test = train_test_split(df, train_size=train_pct, random_state=seed)
     return train, test
 
@@ -25,7 +25,7 @@ def scale_inverse(scaler, train_scaled, test_scaled):
 
 def uniform_scaler(train, test):
     # create the object
-    scaler = sklearn.preprocessing.QuantileTransformer(output_distribution="uniform")
+    scaler = sklearn.preprocessing.QuantileTransformer(n_quantiles=100, output_distribution="uniform", random_state=56)
     # fit the object
     scaler.fit(train)
     # use the object
@@ -35,7 +35,7 @@ def uniform_scaler(train, test):
 
 def gaussian_scaler(train, test):
     # create the object
-    scaler = sklearn.preprocessing.PowerTransformer(method="yeo-johnson", standardize=False)
+    scaler = sklearn.preprocessing.PowerTransformer(method="yeo-johnson")
     # fit the object
     scaler.fit(train)
     # use the object
