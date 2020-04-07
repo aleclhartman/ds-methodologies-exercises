@@ -10,18 +10,28 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 
 # return to optimize this one using Zach's solution
-def plot_residuals(y, yhat, yhat_baseline, df):
-    residual = yhat - y
-    residual_baseline = yhat_baseline - y
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(16, 9))
-    ax1 = axs[0]
-    ax2 = axs[1]
-    ax1.set_title("Residuals")
-    ax2.set_title("Baseline Residuals")
-    fig.text(.1, 0.5, "yhat - y", ha="center", va="center", rotation="vertical")
-    sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[0]) # residual
-    sns.scatterplot(x=y, y=residual_baseline, data=df, color="crimson", ax=axs[1]) # residual baseline
-    plt.show()
+
+# def plot_residuals(y, yhat, yhat_baseline, df):
+#     residual = yhat - y
+#     residual_baseline = yhat_baseline - y
+#     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(16, 9))
+#     ax1 = axs[0]
+#     ax2 = axs[1]
+#     ax1.set_title("Residuals")
+#     ax2.set_title("Baseline Residuals")
+#     fig.text(.1, 0.5, "yhat - y", ha="center", va="center", rotation="vertical")
+#     sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[0]) # residual
+#     sns.scatterplot(x=y, y=residual_baseline, data=df, color="crimson", ax=axs[1]) # residual baseline
+#     plt.show()
+
+def plot_residuals(actual, predicted):
+    residuals = actual - predicted
+    plt.hlines(0, actual.min(), actual.max(), ls=':')
+    plt.scatter(actual, residuals)
+    plt.ylabel('residual ($y - \hat{y}$)')
+    plt.xlabel('actual value ($y$)')
+    plt.title('Actual vs Residual')
+    return plt.gca()
 
 def regression_errors(y, yhat, df):
     return pd.Series({
