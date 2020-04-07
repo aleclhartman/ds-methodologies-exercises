@@ -11,16 +11,16 @@ from math import sqrt
 
 # return to optimize this one using Zach's solution
 def plot_residuals(y, yhat, yhat_baseline, df):
-    residual_baseline = yhat_baseline - y
     residual = yhat - y
+    residual_baseline = yhat_baseline - y
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(16, 9))
     ax1 = axs[0]
     ax2 = axs[1]
-    ax1.set_title("Baseline Residuals")
-    ax2.set_title("Residuals")
+    ax1.set_title("Residuals")
+    ax2.set_title("Baseline Residuals")
     fig.text(.1, 0.5, "yhat - y", ha="center", va="center", rotation="vertical")
-    sns.scatterplot(x=y, y=residual_baseline, data=df, color="crimson", ax=axs[0]) # residual baseline
-    sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[1]) # residual
+    sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[0]) # residual
+    sns.scatterplot(x=y, y=residual_baseline, data=df, color="crimson", ax=axs[1]) # residual baseline
     plt.show()
 
 def regression_errors(y, yhat, df):
@@ -41,6 +41,9 @@ def baseline_mean_errors(y, yhat_baseline, df):
     })
 
 def better_than_baseline(y, yhat, yhat_baseline, df):
+    """
+    Compares root mean square error of predictions and baseline to determine if the model is better than our baseline
+    """
     RMSE = regression_errors(y, yhat, df)["RMSE"]
     RMSE_baseline = baseline_mean_errors(y, yhat_baseline, df)["RMSE_baseline"]
     if RMSE < RMSE_baseline:

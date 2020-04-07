@@ -3,6 +3,13 @@ import pandas as pd
 
 from env import get_db_url
 
+def wrangle_grades():
+    grades = pd.read_csv("student_grades.csv")
+    grades.replace(r'^\s*$', np.nan, regex=True, inplace=True)
+    df = grades.dropna().astype('int')
+    df.drop(columns="student_id", inplace=True)
+    return df
+
 telco_query = """
 SELECT c.customer_id, c.monthly_charges, c.tenure, c.total_charges
 FROM customers AS c
