@@ -9,6 +9,7 @@ from sklearn.metrics import mean_squared_error
 
 from math import sqrt
 
+# return to optimize this one using Zach's solution
 def plot_residuals(y, yhat, yhat_baseline, df):
     residual_baseline = yhat_baseline - y
     residual = yhat - y
@@ -22,31 +23,32 @@ def plot_residuals(y, yhat, yhat_baseline, df):
     sns.scatterplot(x=y, y=residual, data=df, color="navy", ax=axs[1]) # residual
     plt.show()
 
-# consider returning a dictionary (or Series or DataFrame) of your calculations
 def regression_errors(y, yhat, df):
-    SSE = mean_squared_error(y, yhat)*df.shape[0]
-    ESS = sum((yhat - y.mean())**2)
-    TSS = ESS + SSE
-    MSE = mean_squared_error(y, yhat)
-    RMSE = sqrt(MSE)
-    return SSE, ESS, TSS, MSE, RMSE
+    return pd.Series({
+        "SSE": mean_squared_error(y, yhat)*df.shape[0],
+        "ESS": sum((yhat - y.mean())**2),
+        "TSS": sum((yhat - y.mean())**2) + mean_squared_error(y, yhat)*df.shape[0],
+        "MSE": mean_squared_error(y, yhat),
+        "RMSE": sqrt(mean_squared_error(y, yhat))
+    })
 
-# consider returning a dictionary (or Series or DataFrame) of your calculations
-# perhaps, add a baseline_calc argument that can be set to either mean or median so that logic can be added to the function to calculate the baseline within the function
+# perhaps, add a baseline_calc argument that can be set to either mean or median so that logic can be added to the function to calculate the baseline within
 def baseline_mean_errors(y, yhat_baseline, df):
-    SSE_baseline = mean_squared_error(y, yhat_baseline)*df.shape[0]
-    MSE_baseline = mean_squared_error(y, yhat_baseline)
-    RMSE_baseline = sqrt(MSE_baseline)
-    return SSE_baseline, MSE_baseline, RMSE_baseline
+    return pd.Series({
+        "SSE_baseline": mean_squared_error(y, yhat_baseline)*df.shape[0],
+        "MSE_baseline": mean_squared_error(y, yhat_baseline),
+        "RMSE_baseline": sqrt(mean_squared_error(y, yhat_baseline))
+    })
 
 def better_than_baseline(y, yhat, yhat_baseline, df):
-    SSE, ESS, TSS, MSE, RMSE = regression_errors(y=y, yhat=yhat, df=df)
-    SSE_baseline, MSE_baseline, RMSE_baseline = baseline_mean_errors(y=y, yhat_baseline=yhat_baseline, df=df)
+    RMSE = regression_errors(y, yhat, df)["RMSE"]
+    RMSE_baseline = baseline_mean_errors(y, yhat_baseline, df)["RMSE_baseline"]
     if RMSE < RMSE_baseline:
         return True
     else:
         return False
 
+# return to optimize this one using Zach's solution
 def model_significance(ols_model):
     """
     Takes in an ordinary least squares model and returns the p-value of the F-statistic
