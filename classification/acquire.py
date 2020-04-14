@@ -11,7 +11,7 @@ titanic_url = get_db_url("titanic_db")
 
 def get_titanic_data():
     df = pd.read_sql(titanic_query, titanic_url)
-    df.drop(columns=["passenger_id"], inplace=True)
+    # df.drop(columns=["passenger_id"], inplace=True)
     return df
 
 iris_query = """
