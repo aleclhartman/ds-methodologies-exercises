@@ -16,8 +16,8 @@ def rename_iris_columns(df):
 def encode_species(train, test):
     encoder = sklearn.preprocessing.LabelEncoder()
     encoder.fit(train.species)
-    train.species = encoder.transform(train.species)
-    test.species = encoder.transform(test.species)
+    train["species_encoded"] = encoder.transform(train.species)
+    test["species"] = encoder.transform(test.species)
     return encoder, train, test
 
 def prep_iris(df):
@@ -25,7 +25,7 @@ def prep_iris(df):
     df = rename_iris_columns(df)
     train, test = sklearn.model_selection.train_test_split(df, train_size=.8, random_state=56, stratify=df.species)
     encoder, train, test = encode_species(train, test)
-    return train, test
+    return encoder, train, test
 
 
 
