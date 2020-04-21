@@ -33,7 +33,7 @@ def prep_iris(df):
 
 
 def drop_titanic_columns(df):
-    return df.drop(columns="deck")
+    return df.drop(columns="deck", inplace=True)
 
 def impute_embark_town(train, test):
     train.embark_town = train.embark_town.fillna("Southampton")
@@ -74,4 +74,4 @@ def prep_titanic(df):
     encoder, train, test = encode_embarked(train, test)
     train, test = impute_age(train, test)
     scaler, train, test = min_max_scaler(train, test)
-    return train, test
+    return encoder, scaler, train, test
