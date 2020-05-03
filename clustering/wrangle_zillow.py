@@ -170,9 +170,15 @@ def prep_zillow(df):
     # drop rows where regionidzip is missing
     df.drop(index=df[df.regionidzip.isna() == True].index.tolist(), inplace=True)
 
+    # creating county variable
+    df["county"] = df["fips"].map({6037: "Los Angeles County", 6059: "Orange County", 6111: "Ventura County"})
+
+    # creating tax_rate variable
+    df["tax_rate"] = df.taxamount / df.taxvaluedollarcnt
+
     # split data into train, validate, test
-    train, test = train_test_split(df, train_size=.8, random_state=56)
-    train, validate = train_test_split(train, train_size=.75, random_state=56)
+    train, test = train_test_split(df, train_size=.8, random_state=56, stratify=df.county)
+    train, validate = train_test_split(train, train_size=.75, random_state=56, stratify=train.county)
 
     # KNN imputation for regionidcity
     imputer, train, validate, test = impute_regionidcity(train, validate, test)
