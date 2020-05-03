@@ -13,6 +13,9 @@ def get_db_url(dbname) -> str:
     return url.format(user, password, host, dbname)
 
 def get_zillow_data():
+    """
+    Docstring
+    """
     # query zillow data
     zillow_query = """
     SELECT prop.*, pred.logerror, pred.transactiondate, ac.airconditioningdesc, ar.architecturalstyledesc, bu.buildingclassdesc, he.heatingorsystemdesc, la.propertylandusedesc, st.storydesc, co.typeconstructiondesc
@@ -41,6 +44,9 @@ def get_zillow_data():
     return df
 
 def nulls_by_col(df):
+    """
+    Docstring
+    """
     num_missing = df.isnull().sum()
     rows = df.shape[0]
     pct_missing = num_missing / rows
@@ -51,6 +57,9 @@ def nulls_by_col(df):
     return cols_missing
 
 def nulls_by_row(df):
+    """
+    Docstring
+    """
     num_cols_missing = df.isnull().sum(axis=1)
     pct_cols_missing = df.isnull().sum(axis=1) / df.shape[1]
     rows_missing = pd.DataFrame({
@@ -58,14 +67,3 @@ def nulls_by_row(df):
         'pct_cols_missing': pct_cols_missing
     }).reset_index().groupby(['num_cols_missing','pct_cols_missing']).count().rename(index=str, columns={'index': 'num_rows'}).reset_index()
     return rows_missing
-
-def remove_columns(df, cols_to_remove):  
-    df = df.drop(columns=cols_to_remove)
-    return df
-
-def handle_missing_values(df, prop_required_column = .60, prop_required_row = .60):
-    threshold = int(round(prop_required_column*len(df.index),0))
-    df.dropna(axis=1, thresh=threshold, inplace=True)
-    threshold = int(round(prop_required_row*len(df.columns),0))
-    df.dropna(axis=0, thresh=threshold, inplace=True)
-    return df
