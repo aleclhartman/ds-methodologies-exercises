@@ -4,8 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
+from sklearn.impute import KNNImputer
+from sklearn.preprocessing import MinMaxScaler
 
 from os import path
 
@@ -103,6 +104,26 @@ def impute_regionidcity(train, validate, test):
     test["regionidcity"] = imputer.transform(test[["regionidcity"]])
     return imputer, train, validate, test
 
+def scale_numeric_data(train, validate, test):
+    """
+    Docstring
+    """
+    # convert some numeric variables that are categorical by nature so that they do not end up scaled
+    for col in ['fips', 'regionidcity', 'regionidcounty', 'regionidzip']:
+        train[col] = train[col].astype('object')
+    
+    # creating a list of features whose data type is number
+    numeric_columns = train.select_dtypes("number").columns.tolist()
+
+    # scale numeric features
+    scaler = MinMaxScaler()
+    scaler.fit(train[numeric_columns])
+    train[numeric_columns] = scaler.transform(train[numeric_columns])
+    validate[numeric_columns] = scaler.transform(validate[numeric_columns])
+    test[numeric_columns] = scaler.transform(test[numeric_columns])
+
+    return scaler, train, validate, test
+
 def prep_zillow(df):
     """
     Docstring
@@ -183,4 +204,7 @@ def prep_zillow(df):
     # KNN imputation for regionidcity
     imputer, train, validate, test = impute_regionidcity(train, validate, test)
 
-    return imputer, train, validate, test
+    # scale data
+    scaler, train, validate, test = scale_numeric_data(train, validate, test)
+
+    return imputer, scaler, train, validate, test
