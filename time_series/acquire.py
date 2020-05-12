@@ -37,7 +37,7 @@ def get_df(name):
     
     return df
 
-def combine_data(items, stores, sales):
+def combine_data():
     """
     This function does the following:
     1. Left joins the items DataFrame to the sales DataFrame to create a sales_and_items DataFrame
@@ -45,11 +45,38 @@ def combine_data(items, stores, sales):
     3. Returns the master DataFrame with all the data from the three originating DataFrames
     """
     
-    sales_and_items = pd.merge(sales, items, left_on="item", right_on="item_id", how="left")
+    # conditional based on existence of .csv file
+    if path.exists("items.csv"):
+        # read .csv if the file exists
+        items = pd.read_csv("items.csv", index_col=0)
+    else:
+        # else call get_df function
+        items = get_df("items")
+
+    if path.exists("stores.csv"):
+        # read .csv if the file exists
+        stores = pd.read_csv("stores.csv", index_col=0)
+    else:
+        # else call get_df function
+        stores = get_df("stores")
+
+    if path.exists("sales.csv"):
+        # read .csv if the file exists
+        sales = pd.read_csv("sales.csv", index_col=0)
+    else:
+        # else call get_df function
+        sales = get_df("sales")
+
+    if path.exists("master.csv"):
+        # read .csv if the file exists
+        df = pd.read_csv("master.csv", index_col=0)
+    else:
+        # merge .csv files if the master.csv file does not exist
+        sales_and_items = pd.merge(sales, items, left_on="item", right_on="item_id", how="left")
+        df = pd.merge(sales_and_items, stores, left_on="store", right_on="store_id", how="left")
+        df.to_csv("master.csv")
     
-    master = pd.merge(sales_and_items, stores, left_on="store", right_on="store_id", how="left")
-    
-    return master
+    return df
 
 def get_germany():
     """
