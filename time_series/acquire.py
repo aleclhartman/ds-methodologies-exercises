@@ -37,7 +37,7 @@ def get_df(name):
     
     return df
 
-def combine_data():
+def get_sales():
     """
     This function does the following:
     1. Left joins the items DataFrame to the sales DataFrame to create a sales_and_items DataFrame
@@ -74,6 +74,7 @@ def combine_data():
         # merge .csv files if the master.csv file does not exist
         sales_and_items = pd.merge(sales, items, left_on="item", right_on="item_id", how="left")
         df = pd.merge(sales_and_items, stores, left_on="store", right_on="store_id", how="left")
+        df.drop(columns=['item', 'store'], inplace=True)
         df.to_csv("master.csv")
     
     return df
@@ -89,7 +90,7 @@ def get_germany():
     url = "https://raw.githubusercontent.com/jenfly/opsd/master/opsd_germany_daily.csv"
     
     if path.exists("germany.csv"):
-        df = pd.read_csv("germany.csv")
+        df = pd.read_csv("germany.csv", index_col=0)
     else:
         df = pd.read_csv(url)
         df.to_csv("germany.csv")
