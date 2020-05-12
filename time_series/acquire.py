@@ -5,81 +5,35 @@ import requests
 
 from os import path
 
-def get_items(base_url, api):
+def get_df(name):
     """
     This function does the following:
-    1. Looks for an existing items.csv file, reads the csv, and returns a DataFrame
-    2. If the file does not exist, the function iterates through the items pages concatenating each page to the existing DataFrame,
+    1a. Looks for an existing items, stores, or sales .csv file.
+        1b. If the .csv file exists it reads the .csv and returns a DataFrame
+    2. If the file does not exist, the function iterates through the pages for items, stores, or sales concatenating each page to the existing DataFrame,
         writes the DataFrame to a csv file, and returns a DataFrame
     """
     
-    response = requests.get(base_url + api)
+    # variables
+    base_url = "https://python.zach.lol"
+    api_url = base_url + "/api/v1/"
+    response = requests.get(api_url + name)
     data = response.json()
-    df = pd.DataFrame({})
+    df = pd.DataFrame(data["payload"][name])
 
-    if path.exists("items.csv"):
-        df = pd.read_csv("items.csv", index_col=0)
+    # conditional based on existence of .csv file
+    if path.exists(name + ".csv"):
+        # read .csv if the file exists
+        df = pd.read_csv(name + ".csv", index_col=0)
     else:
-        for i in range(1, data["payload"]["max_page"] + 1):
-            if data["payload"]["next_page"] != None:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["items"])]).reset_index().drop(columns="index")
-                response = requests.get(base_url + data["payload"]["next_page"])
-                data = response.json()
-            else:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["items"])]).reset_index().drop(columns="index")
-        df.to_csv("items.csv")
-    
-    return df
+        # iterate through pages and concatenate data if .csv does not exist
+        while data["payload"]["next_page"] != None:
+            response = requests.get(base_url + data["payload"]["next_page"])
+            data = response.json()
+            df = pd.concat([df, pd.DataFrame(data["payload"][name])]).reset_index().drop(columns="index")
 
-def get_stores(base_url, api):
-    """
-    This function does the following:
-    1. Looks for an existing stores.csv file, reads the csv, and returns a DataFrame
-    2. If the file does not exist, the function iterates through the stores pages concatenating each page to the existing DataFrame,
-        writes the DataFrame to a csv file, and returns a DataFrame
-    """
-    
-    response = requests.get(base_url + api)
-    data = response.json()
-    df = pd.DataFrame({})
-
-    if path.exists("stores.csv"):
-        df = pd.read_csv("stores.csv", index_col=0)
-    else:
-        for i in range(1, data["payload"]["max_page"] + 1):
-            if data["payload"]["next_page"] != None:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["stores"])]).reset_index().drop(columns="index")
-                response = requests.get(base_url + data["payload"]["next_page"])
-                data = response.json()
-            else:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["stores"])]).reset_index().drop(columns="index")
-        df.to_csv("stores.csv")
-    
-    return df
-
-def get_sales(base_url, api):
-    """
-    This function does the following:
-    1. Looks for an existing sales.csv file, reads the csv, and returns a DataFrame
-    2. If the file does not exist, the function iterates through the sales pages concatenating each page to the existing DataFrame,
-        writes the DataFrame to a csv file, and returns a DataFrame
-    """
-    
-    response = requests.get(base_url + api)
-    data = response.json()
-    df = pd.DataFrame({})
-
-    if path.exists("sales.csv"):
-        df = pd.read_csv("sales.csv", index_col=0)
-    else:
-        for i in range(1, data["payload"]["max_page"] + 1):
-            if data["payload"]["next_page"] != None:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["sales"])]).reset_index().drop(columns="index")
-                response = requests.get(base_url + data["payload"]["next_page"])
-                data = response.json()
-            else:
-                df = pd.concat([df, pd.DataFrame(data["payload"]["sales"])]).reset_index().drop(columns="index")
-        df.to_csv("sales.csv")
+        # write DataFrame to .csv
+        df.to_csv(name + ".csv")
     
     return df
 
@@ -105,12 +59,12 @@ def get_germany():
         and returns a DataFrame
     """
     
-    link = "https://raw.githubusercontent.com/jenfly/opsd/master/opsd_germany_daily.csv"
+    url = "https://raw.githubusercontent.com/jenfly/opsd/master/opsd_germany_daily.csv"
     
     if path.exists("germany.csv"):
-        df = pd.read_csv("germany.csv", index_col=0)
+        df = pd.read_csv("germany.csv")
     else:
-        df = pd.read_csv(link)
+        df = pd.read_csv(url)
         df.to_csv("germany.csv")
     
     return df
