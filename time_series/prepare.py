@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 
 import acquire as ac
 
-# sales
 
 def convert_sale_date_dtype(df):
     """
@@ -101,6 +100,7 @@ def prep_sales(df):
     df = create_diff_variable(df)
 
     return df
+
 
 def convert_date_dtype(df):
     """
