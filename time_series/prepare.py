@@ -70,14 +70,17 @@ def create_sale_amount_variable(df):
 
     return df
 
-def create_diff_variable(df):
+def daily_sales_diff(df):
     """
-    This function makes a new diff(1) variable
+    This function upsamples the sales DataFrame for a daily frequency, and then calculates the daily difference in sales.
     """
+    # upsampling df for daily frequency
+    daily_sales = pd.DataFrame(df.sale_amount.resample("D").sum())
 
-    df["diff(1)"] = df.sale_amount.diff(1)
+    # calculate daily_sales diff
+    daily_sales["diff"] = daily_sales.sale_amount.diff(1)
 
-    return df
+    return daily_sales
 
 def prep_sales(df):
     """
@@ -95,9 +98,6 @@ def prep_sales(df):
 
     # create new sale amount variable
     df = create_sale_amount_variable(df)
-
-    # create diff variable
-    df = create_diff_variable(df)
 
     return df
 
