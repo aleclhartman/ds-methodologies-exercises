@@ -82,10 +82,13 @@ def daily_sales_diff(df):
 
     return daily_sales
 
-def prep_sales(df):
+def wrangle_sales():
     """
     This function calls all the functions above necessary to prepare the sales DataFrame
     """
+
+    # acquire sales data
+    df = ac.get_sales()
 
     # convert date dtype
     df = convert_sale_date_dtype(df)
@@ -138,11 +141,14 @@ def create_month_year_variables(df):
     
     return df
 
-def prep_germany(df):
+def wrangle_germany():
     """
     This function calls all the functions above necessary to prepare the germany DataFrame
     """
-    
+
+    # acquire germany data
+    df = ac.get_germany()
+
     # convert data types
     df = convert_date_dtype(df)
 
