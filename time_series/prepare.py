@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+
 from datetime import timedelta, datetime
 
 import matplotlib.pyplot as plt
 
 import acquire as ac
-
 
 def convert_sale_date_dtype(df):
     """
@@ -103,7 +103,6 @@ def wrangle_sales():
     df = create_sale_amount_variable(df)
 
     return df
-
 
 def convert_date_dtype(df):
     """
